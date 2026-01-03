@@ -1,0 +1,5 @@
+fr\mycellius\domain\WikiPage.class
+fr\mycellius\App.class
+fr\mycellius\Person.class
+fr\mycellius\Main.class
+fr\mycellius\domain\Tag.class
