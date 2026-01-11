@@ -1,19 +1,28 @@
 package fr.mycellius.service;
 
+import fr.mycellius.domain.Tag;
 import fr.mycellius.repository.InMemoryWiki;
 import fr.mycellius.domain.exception.PageNotFoundException;
 import fr.mycellius.domain.WikiPage;
 import org.junit.jupiter.api.Test;
+
 import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class WikiServiceTest {
+
+    // Petite méthode utilitaire pour fabriquer une Liste de tags de test
+    private List<Tag> tagsDocker(){
+        return List.of(new Tag("Docker"));
+    }
+
     @Test
     void createPage_nominal_cree_une_page() {
         InMemoryWiki repo = new InMemoryWiki();
         WikiService service = new WikiService(repo);
 
-        WikiPage page = service.createPage("PAGE-001", "Installation Docker", "contenu");
+        WikiPage page = service.createPage("PAGE-001", "Installation Docker", "contenu", tagsDocker());
 
         assertEquals("PAGE-001", page.getId());
         assertEquals("Installation Docker", page.getTitle());
@@ -25,10 +34,10 @@ public class WikiServiceTest {
         InMemoryWiki repo = new InMemoryWiki();
         WikiService service = new WikiService(repo);
 
-        service.createPage("PAGE-001", "Titre 1", "contenu");
+        service.createPage("PAGE-001", "Titre 1", "contenu", tagsDocker());
 
         assertThrows(IllegalArgumentException.class, () ->
-                service.createPage("PAGE-001", "Titre 2", "autre contenu")
+                service.createPage("PAGE-001", "Titre 2", "autre contenu", tagsDocker())
         );
     }
 
@@ -37,7 +46,7 @@ public class WikiServiceTest {
         InMemoryWiki repo = new InMemoryWiki();
         WikiService service = new WikiService(repo);
 
-        service.createPage("PAGE-001", "Titre", "contenu");
+        service.createPage("PAGE-001", "Titre", "contenu", tagsDocker());
 
         WikiPage page = service.getPageById("PAGE-001");
 
@@ -69,8 +78,8 @@ public class WikiServiceTest {
         InMemoryWiki repo = new InMemoryWiki();
         WikiService service = new WikiService(repo);
 
-        service.createPage("PAGE-001", "Installation Docker", "...");
-        service.createPage("PAGE-002", "Docker avancé", "...");
+        service.createPage("PAGE-001", "Installation Docker", "...", tagsDocker());
+        service.createPage("PAGE-002", "Docker avancé", "...", tagsDocker());
 
         List<WikiPage> result = service.searchByTitle("docker");
 
