@@ -1,7 +1,8 @@
 package fr.mycellius.service;
 
 import fr.mycellius.domain.Tag;
-import fr.mycellius.repository.InMemoryWiki;
+//import fr.mycellius.repository.InMemoryWiki;
+import fr.mycellius.repository.WikiRepository;
 import fr.mycellius.domain.exception.PageNotFoundException;
 import fr.mycellius.domain.WikiPage;
 
@@ -11,14 +12,23 @@ import java.util.List;
 
 @Service
 public class WikiService {
-    private final InMemoryWiki repository;
+    //private final InMemoryWiki repository;
+    private final WikiRepository repository;
 
-    public WikiService(InMemoryWiki repository) {
+//    public WikiService(InMemoryWiki repository) {
+//        if (repository == null) {
+//            throw new IllegalArgumentException("repository obligatoire");
+//        }
+//        this.repository = repository;
+//    }
+
+    public WikiService(WikiRepository repository) {
         if (repository == null) {
             throw new IllegalArgumentException("repository obligatoire");
         }
         this.repository = repository;
     }
+
 
     /**
      * Crée une nouvelle page wiki.
