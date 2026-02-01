@@ -1,51 +1,54 @@
 package fr.mycellius.repository;
 
 import fr.mycellius.domain.WikiPage;
-import fr.mycellius.domain.exception.PageNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
-//import org.springframework.stereotype.Repository;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
-import java.util.*;
+public class InMemoryWiki implements WikiRepository {
 
-//@Repository
-public class InMemoryWiki implements WikiRepository { // avant on avait : public class InMemoryWiki {
-    private final Map<String, WikiPage> pages = new HashMap<>();
-	public WikiPage save(WikiPage page) {
-        if (page == null) {
-            throw new IllegalArgumentException("page null interdite");
-        }
-        pages.put(page.getId(), page);
+    private final Map<String, WikiPage> store = new ConcurrentHashMap<>();
+
+    @Override
+    public WikiPage save(WikiPage page) {
+        store.put(page.getId(), page);
         return page;
     }
 
-    public boolean existsById(String id) {
-        return pages.containsKey(id);
-    }
-
+    @Override
     public WikiPage getById(String id) {
-        WikiPage page = pages.get(id);
-        if (page == null) {
-            throw new PageNotFoundException(id);
-        }
-        return page;
+        return store.get(id);
     }
 
-    public List<WikiPage> searchByTitleContaining(String fragment) {
-        if (fragment == null) {
-            throw new IllegalArgumentException("fragment de recherche null");
-        }
-        String needle = fragment.trim().toLowerCase(Locale.ROOT);
-        List<WikiPage> result = new ArrayList<>();
-        for (WikiPage page : pages.values()) {
-            String title = page.getTitle();
-            if (title != null && title.toLowerCase(Locale.ROOT).contains(needle)) {
-                result.add(page);
-            }
-        }
-        return result;
-    }
-    public List<WikiPage> findAll() {
+    @Override
+    public Page<WikiPage> findAll(Pageable pageable) {
+        List<WikiPage> all = new ArrayList<>(store.values());
+        all.sort(Comparator.comparing(WikiPage::getId)); // simple et stable
 
-        return new ArrayList<>(pages.values());
+        return toPage(all, pageable);
+    }
+
+    @Override
+    public Page<WikiPage> searchByTitle(String title, Pageable pageable) {
+        String needle = title == null ? "" : title.toLowerCase();
+        List<WikiPage> filtered = store.values().stream()
+                .filter(p -> p.getTitle() != null && p.getTitle().toLowerCase().contains(needle))
+                .sorted(Comparator.comparing(WikiPage::getId))
+                .toList();
+
+        return toPage(filtered, pageable);
+    }
+
+    private Page<WikiPage> toPage(List<WikiPage> source, Pageable pageable) {
+        int start = (int) pageable.getOffset();
+        int end = Math.min(start + pageable.getPageSize(), source.size());
+        List<WikiPage> content = (start >= source.size()) ? List.of() : source.subList(start, end);
+        return new PageImpl<>(content, pageable, source.size());
     }
 }
