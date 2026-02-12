@@ -1,6 +1,7 @@
 package fr.mycellius.repository;
 
 import fr.mycellius.domain.WikiPage;
+import fr.mycellius.domain.exception.PageNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -51,4 +52,13 @@ public class InMemoryWiki implements WikiRepository {
         List<WikiPage> content = (start >= source.size()) ? List.of() : source.subList(start, end);
         return new PageImpl<>(content, pageable, source.size());
     }
+
+    @Override
+    public void deleteById(String id) {
+        WikiPage removed = store.remove(id);
+        if (removed == null) {
+            throw new PageNotFoundException(id);
+        }
+    }
+
 }

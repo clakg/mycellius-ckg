@@ -56,4 +56,19 @@ public class WikiPageController {
         return wikiService.searchByTitle(fragment, pageable).map(mapper::toResponse);
     }
 
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable String id) {
+        wikiService.deletePage(id);
+    }
+
+    @PutMapping("/{id}")
+    public WikiPageResponse update(
+            @PathVariable String id,
+            @Valid @RequestBody CreateWikiPageRequest request
+    ) {
+        WikiPage updated = wikiService.updatePage(id, mapper.toDomain(request));
+        return mapper.toResponse(updated);
+    }
+
 }

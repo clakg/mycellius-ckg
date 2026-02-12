@@ -18,10 +18,10 @@ public interface WikiPageDtoMapper {
     WikiPage toDomain(CreateWikiPageRequest request);
 
     // DTO -> Domain (Tag immuable : on construit un nouvel objet)
-        default Tag toDomain(TagRequest request) {
-            if (request == null) return null;
-            return new Tag(request.name());
-        }
+    default Tag toDomain(TagRequest request) {
+        if (request == null) return null;
+        return new Tag(request.name());
+    }
 
     default java.util.List<Tag> toDomainTags(java.util.List<TagRequest> tags) {
         if (tags == null) return java.util.List.of();
@@ -32,7 +32,13 @@ public interface WikiPageDtoMapper {
     }
 
     // Domain -> DTO
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "tags", expression = "java(java.util.List.of())")
+    // @Mapping(target = "createdAt", ignore = true)
+    // Ça veut dire : “peu importe les tags réels, renvoyer toujours une liste vide”. Donc, tu auras toujours tags: [].
+    // @Mapping(target = "tags", expression = "java(java.util.List.of())")
+
+    default String map(Tag tag) {
+        return tag == null ? null : tag.getValue();
+    }
+
     WikiPageResponse toResponse(WikiPage page);
 }

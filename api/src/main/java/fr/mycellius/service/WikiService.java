@@ -30,6 +30,28 @@ public class WikiService {
         return repository.save(page);
     }
 
+    public WikiPage updatePage(String id, WikiPage page) {
+        if (page == null) {
+            throw new IllegalArgumentException("La page est obligatoire");
+        }
+
+        WikiPage existing = repository.getById(id);
+        if (existing == null) {
+            throw new PageNotFoundException(id);
+        }
+
+        // l'id de l'URL est la source de vérité
+        page.setId(id);
+
+        // on conserve createdAt si le mapper l'a ignoré (ce qui est ton cas).
+        if (page.getCreatedAt() == null) {
+            page.setCreatedAt(existing.getCreatedAt());
+        }
+
+        return repository.save(page); // persiste aussi les tags
+    }
+
+
     public WikiPage getPageById(String id) {
         WikiPage page = repository.getById(id);
         if (page == null) {
@@ -45,4 +67,9 @@ public class WikiService {
     public Page<WikiPage> searchByTitle(String fragment, Pageable pageable) {
         return repository.searchByTitle(fragment, pageable);
     }
+
+    public void deletePage(String id) {
+        repository.deleteById(id);
+    }
+
 }
