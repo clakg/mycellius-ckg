@@ -31,6 +31,13 @@ public class SecurityConfig {
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .httpBasic(b -> b.disable())
                 .formLogin(f -> f.disable())
+                .headers(headers -> headers
+                        .frameOptions(frame -> frame.deny())
+                        .contentTypeOptions(Customizer.withDefaults())
+                        .referrerPolicy(ref -> ref.policy(
+                                org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter.ReferrerPolicy.NO_REFERRER
+                        ))
+                )
 
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
@@ -38,6 +45,9 @@ public class SecurityConfig {
                         // Public
                         .requestMatchers("/api/v1/auth/login").permitAll()
                         .requestMatchers("/api/health", "/actuator/health").permitAll()
+
+                        // Autorise /error
+                        .requestMatchers("/error").permitAll()
 
                         // Swagger/OpenAPI
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
@@ -55,13 +65,18 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/pages/**")
                         .hasAnyRole("DEV", "ADMIN")
 
+                        // RBAC Audit (ADMIN only)
+                        .requestMatchers(HttpMethod.GET, "/api/v1/audit/**")
+                        .hasRole("ADMIN")
+
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(new JwtAuthenticationFilter(jwtService), UsernamePasswordAuthenticationFilter.class);
 
         http.exceptionHandling(eh -> eh
                 .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
-                .accessDeniedHandler((req, res, ex) -> res.sendError(HttpStatus.FORBIDDEN.value()))
+                // .accessDeniedHandler((req, res, ex) -> res.sendError(HttpStatus.FORBIDDEN.value()))
+                .accessDeniedHandler((req, res, ex) -> res.setStatus(HttpStatus.FORBIDDEN.value()))
         );
 
         return http.build();

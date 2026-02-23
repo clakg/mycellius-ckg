@@ -10,7 +10,7 @@ import java.util.List;
 public record CreateWikiPageRequest(
 
         @NotBlank(message = "L'id est obligatoire")
-        @Pattern(regexp = "PAGE-\\d{3}", message = "Format d'id attendu : PAGE-001")
+        @Pattern(regexp = "^PAGE-\\d{3}$", message = "Format d'id attendu : PAGE-001")
         String id,
 
         @NotBlank(message = "Le titre est obligatoire")
@@ -21,6 +21,7 @@ public record CreateWikiPageRequest(
         @Size(max = 10000, message = "Le contenu est trop long (max 10000)")
         String content,
 
+        @Size(max = 20, message = "Max 20 tags")
         @Valid
         List<TagRequest> tags
 ) {}

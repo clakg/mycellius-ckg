@@ -31,6 +31,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
 
         String header = request.getHeader(HttpHeaders.AUTHORIZATION);
+        System.out.println("[JWT] " + request.getMethod() + " " + request.getRequestURI() + " header=" + header);
 
         if (header != null && header.startsWith("Bearer ")) {
             String token = header.substring(7);
@@ -39,6 +40,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 DecodedJWT jwt = jwtService.verify(token);
                 String username = jwt.getSubject();
                 String role = jwt.getClaim("role").asString();
+                System.out.println("[JWT] OK user=" + username + " role=" + role);
 
                 var auth = new UsernamePasswordAuthenticationToken(
                         username,
@@ -50,6 +52,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             } catch (Exception ex) {
                 SecurityContextHolder.clearContext(); // token invalide
+                System.out.println("[JWT] FAIL " + ex.getClass().getSimpleName() + " " + ex.getMessage());
             }
         }
 

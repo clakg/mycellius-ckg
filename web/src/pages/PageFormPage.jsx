@@ -28,6 +28,7 @@ export default function PageFormPage({ mode }) {
       try {
         const res = await apiRequest(`/api/v1/pages/${id}`, { token });
         setForm({ ...res, tags: res.tags ?? [] });
+        //setTagsText((res.tags ?? []).map(t => t.name).join(", "));
         setTagsText((res.tags ?? []).join(", "));
       } catch (e) {
         if (e instanceof ApiError && e.status === 401) {
@@ -53,15 +54,17 @@ export default function PageFormPage({ mode }) {
 
     const tags = tagsText
       .split(",")
-      .map((s) => s.trim())
-      .filter(Boolean);
+      .map(s => s.trim())
+      .filter(Boolean)
+      .map(name => ({ name }));
 
     const payload = { ...form, tags };
 
     try {
       if (mode === "create") {
         await apiRequest("/api/v1/pages", { method: "POST", token, body: payload });
-        navigate("/pages");
+        navigate("/pages", { state: { flash: { type: "success", message: `Page ${form.id} créée` } } });
+
       } else {
         await apiRequest(`/api/v1/pages/${id}`, { method: "PUT", token, body: payload });
         navigate(`/pages/${id}`);
@@ -76,7 +79,7 @@ export default function PageFormPage({ mode }) {
         navigate("/forbidden");
         return;
       }
-      setError("Erreur enregistrement");
+      setError(e instanceof ApiError ? JSON.stringify(e.body) : "Erreur enregistrement");
     } finally {
       setLoading(false);
     }

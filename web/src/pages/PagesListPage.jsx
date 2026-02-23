@@ -44,12 +44,42 @@ export default function PagesListPage() {
     load();
   }, [token, logout, navigate]);
 
+  async function onDelete(id) {
+    if (!window.confirm(`Supprimer ${id} ?`)) return;
+
+    try {
+      await apiRequest(`/api/v1/pages/${id}`, { method: "DELETE", token });
+      setPages(prev => prev.filter(p => p.id !== id)); // update UI
+    } catch (e) {
+      if (e instanceof ApiError && e.status === 401) {
+        logout();
+        navigate("/login");
+        return;
+      }
+      if (e instanceof ApiError && e.status === 403) {
+        navigate("/forbidden");
+        return;
+      }
+      setError(e instanceof ApiError ? JSON.stringify(e.body) : "Erreur suppression");
+    }
+  }
+
   return (
     <div style={{ padding: 24 }}>
       <h2>Pages</h2>
 
       <div style={{ marginBottom: 12 }}>
         <p>Rôle : {role}</p>
+
+        <button
+          style={{ marginLeft: 12 }}
+          onClick={async () => {
+            await logout();
+            navigate("/login");
+          }}
+        >
+          Déconnexion
+        </button>
 
         {(role === "DEV" || role === "ADMIN") && (
           <Link to="/pages/new">Créer une page</Link>
@@ -64,6 +94,16 @@ export default function PagesListPage() {
             <Link to={`/pages/${p.id}`}>
               {p.title} ({p.id})
             </Link>
+            {(p.tags?.length ?? 0) > 0 && (
+                <div style={{ fontSize: 12, opacity: 0.8 }}>
+                  Tags : {p.tags.join(", ")}
+                </div>
+            )}
+            {(role === "DEV" || role === "ADMIN") && (
+              <button style={{ marginLeft: 10 }} onClick={() => onDelete(p.id)}>
+                Supprimer
+              </button>
+            )}
           </li>
         ))}
       </ul>

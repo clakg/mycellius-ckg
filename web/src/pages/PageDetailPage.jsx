@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { apiRequest, ApiError } from "../api/apiClient";
 import { useAuth } from "../auth/AuthContext";
+import SafeMarkdown from "../components/SafeMarkdown";
 
 export default function PageDetailPage() {
   const { id } = useParams();
@@ -53,7 +54,13 @@ export default function PageDetailPage() {
       <h2>{page.title}</h2>
       <p><b>ID</b> : {page.id}</p>
 
-      <pre style={{ whiteSpace: "pre-wrap" }}>{page.content}</pre>
+      {(page.tags?.length ?? 0) > 0 && (
+        <p>Tags : {page.tags.join(", ")}</p>
+      )}
+
+      <div style={{ whiteSpace: "normal" }}>
+        <SafeMarkdown markdown={page.content} />
+      </div>
 
       {(role === "DEV" || role === "ADMIN") && (
         <p><Link to={`/pages/${page.id}/edit`}>Éditer</Link></p>
