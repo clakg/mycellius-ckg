@@ -3,6 +3,8 @@ C:\Users\clakg\mycellius\api\src\main\java\fr\mycellius\domain\Tag.java
 C:\Users\clakg\mycellius\api\src\main\java\fr\mycellius\domain\WikiPage.java
 C:\Users\clakg\mycellius\api\src\main\java\fr\mycellius\MycelliusApiApplication.java
 C:\Users\clakg\mycellius\api\src\main\java\fr\mycellius\persistence\adapter\DatabaseWikiRepository.java
+C:\Users\clakg\mycellius\api\src\main\java\fr\mycellius\persistence\audit\AuditLogEntity.java
+C:\Users\clakg\mycellius\api\src\main\java\fr\mycellius\persistence\audit\AuditLogJpaRepository.java
 C:\Users\clakg\mycellius\api\src\main\java\fr\mycellius\persistence\entity\TagEntity.java
 C:\Users\clakg\mycellius\api\src\main\java\fr\mycellius\persistence\entity\UserEntity.java
 C:\Users\clakg\mycellius\api\src\main\java\fr\mycellius\persistence\entity\WikiPageEntity.java
@@ -10,6 +12,8 @@ C:\Users\clakg\mycellius\api\src\main\java\fr\mycellius\persistence\jpa\TagJpaRe
 C:\Users\clakg\mycellius\api\src\main\java\fr\mycellius\persistence\jpa\UserJpaRepository.java
 C:\Users\clakg\mycellius\api\src\main\java\fr\mycellius\persistence\jpa\WikiPageJpaRepository.java
 C:\Users\clakg\mycellius\api\src\main\java\fr\mycellius\persistence\mapper\WikiPageEntityMapper.java
+C:\Users\clakg\mycellius\api\src\main\java\fr\mycellius\persistence\revision\WikiPageRevisionEntity.java
+C:\Users\clakg\mycellius\api\src\main\java\fr\mycellius\persistence\revision\WikiPageRevisionJpaRepository.java
 C:\Users\clakg\mycellius\api\src\main\java\fr\mycellius\Person.java
 C:\Users\clakg\mycellius\api\src\main\java\fr\mycellius\repository\InMemoryWiki.java
 C:\Users\clakg\mycellius\api\src\main\java\fr\mycellius\repository\WikiRepository.java
@@ -18,10 +22,15 @@ C:\Users\clakg\mycellius\api\src\main\java\fr\mycellius\security\JwtService.java
 C:\Users\clakg\mycellius\api\src\main\java\fr\mycellius\security\PasswordConfig.java
 C:\Users\clakg\mycellius\api\src\main\java\fr\mycellius\security\SecurityConfig.java
 C:\Users\clakg\mycellius\api\src\main\java\fr\mycellius\security\SeedUsersRunner.java
+C:\Users\clakg\mycellius\api\src\main\java\fr\mycellius\service\AuditService.java
+C:\Users\clakg\mycellius\api\src\main\java\fr\mycellius\service\RevisionService.java
 C:\Users\clakg\mycellius\api\src\main\java\fr\mycellius\service\WikiService.java
 C:\Users\clakg\mycellius\api\src\main\java\fr\mycellius\web\ApiErrorResponse.java
 C:\Users\clakg\mycellius\api\src\main\java\fr\mycellius\web\ApiExceptionHandler.java
+C:\Users\clakg\mycellius\api\src\main\java\fr\mycellius\web\controller\AuditController.java
 C:\Users\clakg\mycellius\api\src\main\java\fr\mycellius\web\controller\AuthController.java
+C:\Users\clakg\mycellius\api\src\main\java\fr\mycellius\web\controller\MetaController.java
+C:\Users\clakg\mycellius\api\src\main\java\fr\mycellius\web\controller\RevisionController.java
 C:\Users\clakg\mycellius\api\src\main\java\fr\mycellius\web\controller\TagController.java
 C:\Users\clakg\mycellius\api\src\main\java\fr\mycellius\web\controller\WikiPageController.java
 C:\Users\clakg\mycellius\api\src\main\java\fr\mycellius\web\CreatePageRequest.java
