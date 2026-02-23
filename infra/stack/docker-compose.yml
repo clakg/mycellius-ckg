@@ -1,0 +1,28 @@
+version: "3.9"
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mycellius-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: mycellius
+      MYSQL_USER: mycellius
+      MYSQL_PASSWORD: mycellius
+    volumes:
+      - ./data:/var/lib/mysql
+
+  api:
+    build: ../../api
+    container_name: mycellius-api
+    restart: unless-stopped
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/mycellius?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: mycellius
+      SPRING_DATASOURCE_PASSWORD: mycellius
+      MYCELLIUS_ENV: ${MYCELLIUS_ENV}
+      MYCELLIUS_VERSION: ${MYCELLIUS_VERSION}
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
