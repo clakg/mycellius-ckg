@@ -7,10 +7,9 @@ ENV_NAME="${2:-DEV}"
 cd /var/www/html/mycellius
 
 git fetch origin
-git checkout "$BRANCH"
-git reset --hard
+git checkout -B "$BRANCH" "origin/$BRANCH"
+git reset --hard "origin/$BRANCH"
 git clean -fd
-git pull origin "$BRANCH"
 
 export MYCELLIUS_ENV="$ENV_NAME"
 export MYCELLIUS_VERSION="$(git rev-parse --short HEAD)"
