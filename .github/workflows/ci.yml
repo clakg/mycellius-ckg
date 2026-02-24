@@ -34,21 +34,29 @@ jobs:
         run: docker build -t mycellius-api:${{ github.sha }} ./api
 
   deploy-dev:
-    runs-on: [self-hosted, dev-runner]
+    runs-on: [ self-hosted, dev-runner ]
     needs: [ api-tests, api-docker-build ]
     if: github.event_name == 'push' && github.ref == 'refs/heads/dev'
     steps:
-      - name: Deploy DEV (local)
+      - name: Ensure deploy script is executable
+        run: |
+          cd /var/www/html/mycellius
+          chmod +x infra/deploy/deploy.sh
+      - name: Deploy DEV
         run: |
           cd /var/www/html/mycellius
           ./infra/deploy/deploy.sh dev DEV
 
   deploy-test:
-    runs-on: [self-hosted, test-runner]
+    runs-on: [ self-hosted, dev-runner ]
     needs: [ api-tests, api-docker-build ]
     if: github.event_name == 'push' && github.ref == 'refs/heads/test'
     steps:
-      - name: Deploy TEST (local)
+      - name: Ensure deploy script is executable
+        run: |
+          cd /var/www/html/mycellius
+          chmod +x infra/deploy/deploy.sh
+      - name: Deploy TEST
         run: |
           cd /var/www/html/mycellius
           ./infra/deploy/deploy.sh test TEST
