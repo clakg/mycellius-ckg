@@ -34,7 +34,7 @@ jobs:
         run: docker build -t mycellius-api:${{ github.sha }} ./api
 
   deploy-dev:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: [ api-tests, api-docker-build ]
     if: github.event_name == 'push' && github.ref == 'refs/heads/dev'
     steps:
@@ -49,7 +49,7 @@ jobs:
             ./infra/deploy/deploy.sh dev DEV
 
   deploy-test:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: [ api-tests, api-docker-build ]
     if: github.event_name == 'push' && github.ref == 'refs/heads/test'
     steps:
