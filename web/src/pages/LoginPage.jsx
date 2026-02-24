@@ -42,7 +42,7 @@ export default function LoginPage() {
   return (
     <div style={{ padding: 24 }}>
       <h2>Mycellius — Login</h2>
-
+      <h3>Bienvenue</h3>
       <form onSubmit={onSubmit} style={{ display: "grid", gap: 12, maxWidth: 320 }}>
         <input
           value={username}
