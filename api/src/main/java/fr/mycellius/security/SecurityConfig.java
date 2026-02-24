@@ -45,7 +45,7 @@ public class SecurityConfig {
                         // Public
                         .requestMatchers("/api/v1/auth/login").permitAll()
                         .requestMatchers("/api/health", "/actuator/health").permitAll()
-
+                        .requestMatchers("/api/version").permitAll()
                         // Autorise /error
                         .requestMatchers("/error").permitAll()
 
