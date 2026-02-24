@@ -48,7 +48,7 @@ jobs:
           ./infra/deploy/deploy.sh dev DEV
 
   deploy-test:
-    runs-on: [ self-hosted, dev-runner ]
+    runs-on: [ self-hosted, test-runner ]
     needs: [ api-tests, api-docker-build ]
     if: github.event_name == 'push' && github.ref == 'refs/heads/test'
     steps:
