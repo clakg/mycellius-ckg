@@ -38,15 +38,10 @@ jobs:
     needs: [ api-tests, api-docker-build ]
     if: github.event_name == 'push' && github.ref == 'refs/heads/dev'
     steps:
-      - name: Deploy DEV (SSH)
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.SSH_HOST_DEV }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          script: |
-            cd /var/www/html/mycellius
-            ./infra/deploy/deploy.sh dev DEV
+      - name: Deploy DEV (local)
+        run: |
+          cd /var/www/html/mycellius
+          ./infra/deploy/deploy.sh dev DEV
 
   deploy-test:
     runs-on: self-hosted
