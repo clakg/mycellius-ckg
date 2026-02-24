@@ -1,3 +1,6 @@
+# Runner git action
+actions-runner/
+
 # IntelliJ
 .idea/
 *.iml
