@@ -60,3 +60,17 @@ jobs:
         run: |
           cd /var/www/html/mycellius
           ./infra/deploy/deploy.sh test TEST
+
+  deploy-prod:
+    runs-on: [ self-hosted, prod-runner ]
+    needs: [ api-tests, api-docker-build ]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/prod'
+    steps:
+      - name: Ensure deploy script is executable
+        run: |
+          cd /var/www/html/mycellius
+          chmod +x infra/deploy/deploy.sh
+      - name: Deploy PROD
+        run: |
+          cd /var/www/html/mycellius
+          ./infra/deploy/deploy.sh prod PROD

@@ -10,7 +10,7 @@ import java.util.Map;
 public class MetaController {
 
     @Value("${mycellius.env}")
-    private String env;
+        private String env;
 
     @Value("${mycellius.version}")
     private String version;
