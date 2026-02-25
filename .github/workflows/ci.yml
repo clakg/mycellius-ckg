@@ -73,3 +73,31 @@ jobs:
 
       - name: Deploy PROD
         run: ./infra/deploy/deploy.sh prod PROD
+
+  deploy-web-prod:
+    runs-on: [ self-hosted, prod-runner ]
+    needs: [ api-tests, api-docker-build ]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/prod'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Who am I (debug)
+        run: whoami
+
+      - name: Build React (web)
+        working-directory: web
+        run: |
+          npm ci
+          npm run build
+
+      - name: Stage build (owned by clarisse)
+        run: |
+          mkdir -p /var/www/deploy/mycellius-web
+          rm -rf /var/www/deploy/mycellius-web/*
+          cp -r web/dist/* /var/www/deploy/mycellius-web/
+
+      - name: Publish to nginx (single sudo)
+        run: |
+          sudo rsync -a --delete /var/www/deploy/mycellius-web/ /var/www/html/
+          sudo chown -R www-data:www-data /var/www/html
+          sudo systemctl reload nginx
