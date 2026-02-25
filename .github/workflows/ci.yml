@@ -66,11 +66,10 @@ jobs:
     needs: [ api-tests, api-docker-build ]
     if: github.event_name == 'push' && github.ref == 'refs/heads/prod'
     steps:
+      - uses: actions/checkout@v4
+
       - name: Ensure deploy script is executable
-        run: |
-          cd /var/www/html/mycellius
-          chmod +x infra/deploy/deploy.sh
+        run: chmod +x infra/deploy/deploy.sh
+
       - name: Deploy PROD
-        run: |
-          cd /var/www/html/mycellius
-          ./infra/deploy/deploy.sh prod PROD
+        run: ./infra/deploy/deploy.sh prod PROD
