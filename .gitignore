@@ -1,0 +1,21 @@
+# Runner git action
+actions-runner/
+
+# IntelliJ
+.idea/
+*.iml
+
+# Maven
+**/target/
+
+# Node
+web/node_modules/
+web/dist/
+
+# Docker/MySQL volumes (NE PAS versionner)
+infra/db/data/
+infra/stack/data/
+*.sock
+
+# Rapports ZAP (optionnel)
+zap_report*.html
