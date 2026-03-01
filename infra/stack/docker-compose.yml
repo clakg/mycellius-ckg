@@ -10,14 +10,13 @@ services:
       MARIADB_USER: mycellius
       MARIADB_PASSWORD: mycellius
     volumes:
-      - ./data:/var/lib/mysql
+      - mycellius_db:/var/lib/mysql
 
   api:
     build: ../../api
     container_name: mycellius-api
     restart: unless-stopped
     environment:
-      environment:
       MYCELLIUS_CORS_ALLOWED_ORIGINS: "http://100.66.190.108,http://192.168.1.53"
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/mycellius?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: mycellius
@@ -28,3 +27,6 @@ services:
       - "8080:8080"
     depends_on:
       - mysql
+
+volumes:
+  mycellius_db:
